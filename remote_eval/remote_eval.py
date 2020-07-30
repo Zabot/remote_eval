@@ -6,7 +6,7 @@ import remote_eval.languages.python as environment
 references = {}
 
 def array(ref_id):
-    return {'type': 'reference', 'refID': ref_id}
+    return {'type': 'array', 'refID': ref_id}
 
 def obj(ref_id):
     return {'type': 'obj', 'refID': ref_id}
