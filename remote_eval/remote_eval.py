@@ -18,12 +18,16 @@ def literal(value):
 
 # Flatten an object into references
 def flatten(o):
+    if o is None:
+        return {'type': 'none'}
+
     # If this object has already been flattened before, return the existing
     # reference
     if id(o) in references:
         return id(o)
 
-    try:
+    if type(o) is dict:
+
         # Allocate the reference before we start recursing in case this object
         # refers to itself
         references[id(o)] = None
@@ -32,20 +36,18 @@ def flatten(o):
         references[id(o)] = { key: flatten(val) for key, val in o.items() }
         return obj(id(o))
 
-    except AttributeError:
+    elif type(o) is list:
         # o wasn't a dictonary, flatten every item in an iterable
-        try:
-            # Allocate the reference before we start recursing in case this object
-            # refers to itself
-            references[id(o)] = None
+        # Allocate the reference before we start recursing in case this object
+        # refers to itself
+        references[id(o)] = None
 
-            references[id(o)] = [ flatten(item) for item in o ]
-            return array(id(o))
+        references[id(o)] = [ flatten(item) for item in o ]
+        return array(id(o))
 
-        except TypeError:
-            # o wasn't an iterable, it must be a literal
-            return literal(o)
-
+    else:
+        # o wasn't an iterable, it must be a literal
+        return literal(o)
 
 def handle_message(request):
     # If this is a request to evaluate
@@ -55,8 +57,7 @@ def handle_message(request):
                                               # package='remote_eval.languages')
 
         result = environment.execute(request['statement'], request['session'])
-        if result is None:
-            return None
+
         return flatten(result)
 
     elif request['message'] == 'interrogate':
