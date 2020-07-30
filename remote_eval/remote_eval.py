@@ -30,12 +30,11 @@ def flatten(o):
 
         # Allocate the reference before we start recursing in case this object
         # refers to itself
-        references[id(o)] = None
+        references[id(o)] = { 'type': 'obj' }
 
         # Flatten every value in a dictonary
-        references[id(o)] = {
-                'type': 'obj',
-                'value': { key: flatten(val) for key, val in o.items() }
+        references[id(o)]['value'] = {
+                key: flatten(val) for key, val in o.items()
             }
         return obj(id(o))
 
@@ -44,12 +43,9 @@ def flatten(o):
         # o wasn't a dictonary, flatten every item in an iterable
         # Allocate the reference before we start recursing in case this object
         # refers to itself
-        references[id(o)] = None
+        references[id(o)] = { 'type': 'array' }
 
-        references[id(o)] = {
-                'type': 'array',
-                'value': [ flatten(item) for item in o ]
-            }
+        references[id(o)]['value'] = [ flatten(item) for item in o ]
         return array(id(o))
 
     else:
