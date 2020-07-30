@@ -48,8 +48,6 @@ def flatten(o):
 
 
 def handle_message(request):
-    # request = json.loads(message)
-
     # If this is a request to evaluate
     if request['message'] == 'evaluate':
         # Find the right plugin and execute
@@ -63,15 +61,4 @@ def handle_message(request):
 
     elif request['message'] == 'interrogate':
         pass
-
-def evaluate(statement):
-    return handle_message({'message': 'evaluate',
-                           'environment': 'python',
-                           'session': 1,
-                           'statement': statement})
-
-print(evaluate('name = 1'))
-print(evaluate('name'))
-print(evaluate('name = [1,2,3]'))
-print(evaluate('name'))
 
