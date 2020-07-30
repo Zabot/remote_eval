@@ -1,7 +1,7 @@
 import json
 import importlib
 
-import remote_eval.languages
+import remote_eval.languages.python as environment
 
 references = {}
 
@@ -51,8 +51,8 @@ def handle_message(request):
     # If this is a request to evaluate
     if request['message'] == 'evaluate':
         # Find the right plugin and execute
-        environment = importlib.import_module(request['environment'],
-                                              package='remote_eval.languages')
+        # environment = importlib.import_module(request['environment'],
+                                              # package='remote_eval.languages')
 
         result = environment.execute(request['statement'], request['session'])
         if result is None:
