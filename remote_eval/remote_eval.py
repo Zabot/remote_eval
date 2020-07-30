@@ -61,5 +61,8 @@ def handle_message(request):
         return flatten(result)
 
     elif request['message'] == 'interrogate':
-        pass
+        try:
+            return references[request['refID']]
+        except KeyError:
+            return None
 
