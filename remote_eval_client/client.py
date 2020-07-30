@@ -5,21 +5,21 @@ host='http://localhost:5000/remote_eval'
 
 # Deserialize a reply from the remote_eval server
 def deserialize(data):
-    if type(data) is list:
-        return [ deserialize(item) for item in data ]
 
-    # elif type(data) is dict:
-        # return { key: deserialize(value) for key, value in data.items() }
+    if data['type'] == 'none':
+        return None
 
-    else:
-        if data['type'] == 'none':
-            return None
+    # If the result is populated, no reference objects are needed
+    if 'value' in data:
+        value = data['value']
+        if data['type'] == 'obj':
+            return { k: deserialize(v) for k, v in value.items() }
+        elif data['type'] == 'array':
+            return [ deserialize(item) for item in value ]
 
-        # If the result is a literal, no need to store
-        if 'value' in data:
-            return data['value']
+        return data['value']
 
-        return Reference(data)
+    return Reference(data)
 
 def execute(statement, environment='python'):
     data = {

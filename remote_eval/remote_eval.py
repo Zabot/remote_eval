@@ -24,7 +24,7 @@ def flatten(o):
     # If this object has already been flattened before, return the existing
     # reference
     if id(o) in references:
-        return id(o)
+        return { 'type': references[id(o)]['type'], 'refID': id(o) }
 
     if type(o) is dict:
 
@@ -33,16 +33,23 @@ def flatten(o):
         references[id(o)] = None
 
         # Flatten every value in a dictonary
-        references[id(o)] = { key: flatten(val) for key, val in o.items() }
+        references[id(o)] = {
+                'type': 'obj',
+                'value': { key: flatten(val) for key, val in o.items() }
+            }
         return obj(id(o))
 
     elif type(o) is list:
+
         # o wasn't a dictonary, flatten every item in an iterable
         # Allocate the reference before we start recursing in case this object
         # refers to itself
         references[id(o)] = None
 
-        references[id(o)] = [ flatten(item) for item in o ]
+        references[id(o)] = {
+                'type': 'array',
+                'value': [ flatten(item) for item in o ]
+            }
         return array(id(o))
 
     else:
