@@ -72,16 +72,3 @@ class Reference:
     def __repr__(self):
         return str(self)
 
-execute('names = "zach"')
-execute('names = ["zach", "dan"]')
-execute('more_names = ["zach", "dan", names]')
-names = execute('more_names')
-print(names)
-print(names.expand())
-print(names)
-print(names[0])
-print(names[1])
-print(names[2])
-print(names[2].expand())
-print(names)
-
